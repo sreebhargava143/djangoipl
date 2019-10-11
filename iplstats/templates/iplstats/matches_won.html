@@ -38,15 +38,41 @@
             yAxis: {
                 min: 0,
                 title: {
-                text: 'Total Matches Won'
-                }
+                    text: 'Total Matches Won'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                            fontWeight: 'bold',
+                            color: ( // theme
+                            Highcharts.defaultOptions.title.style &&
+                            Highcharts.defaultOptions.title.style.color
+                            ) || 'gray'
+                        }
+                    }
             },
             legend: {
+                align: 'right',
+                x: -30,
+                verticalAlign: 'top',
+                y: 25,
+                backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false,
                 reversed: true
+            },
+            tooltip: {
+                headerFormat: '<b>{point.x}</b><br/>',
+                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
             },
             plotOptions: {
                 series: {
-                stacking: 'normal'
+                stacking: 'normal',
+                dataLabels: {
+                        enabled: true
+                    }
                 }
             },
             series: series_data

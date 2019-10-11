@@ -1,19 +1,19 @@
 {% extends "iplstats/base.html" %}
-
 {% block content %}
-    <!-- {% comment %}<fieldset>
-        <legend class=''>{{ legend }} In {{season}}</legend>
+   <!-- {% comment %} <fieldset>
+        <legend class=''>{{ legend }}</legend>
         {% for match in data %}
             <article class="media content-section">
                 <div class="media-body">
                     <div class="article-metadata">
-                        <h2><p class="article-title">{{ match.delivery__bowler }}</p></h2>
+                        <p class="mr-2" href="#"></p>
                     </div>
-                    <h4><p class="article-content">{{ match.economy }}</p></h4>
+                    <h2><p class="article-title" href="#"></p></h2>
+                    <p class="article-content">{{match}}</p>
                 </div>
             </article>
         {% endfor %}
-    </fieldset>{% endcomment%} -->
+    </fieldset>{% endcomment %} -->
     <article>
         <div class="plot" id='plot-container'></div>
     </article>
@@ -23,23 +23,23 @@
                 type: 'column'
             },
             title: {
-                text: 'Bowlers Economy'
+                text: 'Batsmen Strike Rate'
             },
             xAxis: {
                 categories: [
-                    {% for entry in data %}'{{ entry.delivery__bowler }}'{% if not forloop.last %}, {% endif %}{% endfor %}
+                    {% for entry in data %}'{{ entry.delivery__batsman }}'{% if not forloop.last %}, {% endif %}{% endfor %}
                 ]
             },
             yAxis: {
-                title: {text: 'Economy'}
+                title: {text: 'Strike Rate'}
             },
             series: [{
-                name: 'Bowlers',
+                name: 'Batsmen',
                 data: [
-                    {% for entry in data %}{{ entry.economy }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    {% for entry in data %}{{ entry.strike_rate }}{% if not forloop.last %}, {% endif %}{% endfor %}
                 ],
                 
             } ]
         });
     </script>
-{% endblock content %}
+{% endblock content%}

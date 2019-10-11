@@ -45,10 +45,17 @@ def bowlers_economy(request):
     }
     return render(request, 'iplstats/bowlers_economy.html', context)
 
+def batsmen_performance(request):
+    
+    data = Match.objects.values('season', 'delivery__batsman').annotate(strike_rate=(Cast(Cast(Sum('delivery__batsman_runs')*100, FloatField()) / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1)),default=0, output_field=FloatField()), FloatField()))).order_by('-strike_rate')[:10]
 
+    context = {
+        'data':data,
+        'title':'Batsmen Performance',
+        'legend':'Batsmen Performance',
+    }
+    return render(request, 'iplstats/batsmen_performance.html', context)
 
-    # SELECT "iplstats_match"."season", "iplstats_match"."winner", COUNT("iplstats_match"."id") AS "id__count" 
-    # FROM "iplstats_match" 
-    # GROUP BY "iplstats_match"."season", "iplstats_match"."winner" ORDER BY "iplstats_match"."season" DESC
+# Match.objects.values('season', 'delivery__batsman').annotate(strike_rate=(Sum('delivery__batsman_runs') * 100 / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1), default=0, output_field=FloatField()), output_field=FloatField())))
 
-    # [{'season': 2017, 'winner': 'Delhi Daredevils', 'id__count': 6}, {'season': 2017, 'winner': 'Mumbai Indians', 'id__count': 12}, {'season': 2017, 'winner': 'Royal Challengers Bangalore', 'id__count': 3}, {'season': 2017, 'winner': 'Sunrisers Hyderabad', 'id__count': 8}, {'season': 2017, 'winner': 'Kings XI Punjab', 'id__count': 7}, {'season': 2017, 'winner': 'Gujarat Lions', 'id__count': 4}, {'season': 2017, 'winner': 'Rising Pune Supergiant', 'id__count': 10}, {'season': 2017, 'winner': 'Kolkata Knight Riders', 'id__count': 9}, {'season': 2016, 'winner': 'Royal Challengers Bangalore', 'id__count': 9}, {'season': 2016, 'winner': 'Mumbai Indians', 'id__count': 7}, {'season': 2016, 'winner': 'Gujarat Lions', 'id__count': 9}, {'season': 2016, 'winner': 'Rising Pune Supergiants', 'id__count': 5}, {'season': 2016, 'winner': 'Kings XI Punjab', 'id__count': 4}, {'season': 2016, 'winner': 'Delhi Daredevils', 'id__count': 7}, {'season': 2016, 'winner': 'Sunrisers Hyderabad', 'id__count': 11}, {'season': 2016, 'winner': 'Kolkata Knight Riders', 'id__count': 8}, {'season': 2015, 'winner': 'Royal Challengers Bangalore', 'id__count': 8}, {'season': 2015, 'winner': 'Kolkata Knight Riders', 'id__count': 7}, {'season': 2015, 'winner': 'Rajasthan Royals', 'id__count': 7}, {'season': 2015, 'winner': 'Delhi Daredevils', 'id__count': 5}, '...(remaining elements truncated)...']
+# Match.objects.values('season', 'delivery__batsman').annotate(strike_rate=(Cast(Cast(Sum('delivery__batsman_runs')*100, FloatField()) / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1)),default=0, output_field=FloatField()), FloatField()))).order_by('-strike_rate')
