@@ -1,6 +1,6 @@
 {% extends "iplstats/base.html" %}
 {% block content %}
-    <fieldset>
+    <!-- {% comment %}<fieldset class='media'>
         <legend class=''>{{ legend }}</legend>
         {% for match in data %}
             <article class="media content-section">
@@ -12,5 +12,33 @@
                 </div>
             </article>
         {% endfor %}
-    </fieldset>
+    </fieldset>{% endcomment%} -->
+    <article>
+        <div class="plot" id='plot-container'></div>
+    </article>
+    <script>
+        Highcharts.chart('plot-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Matches Played Per Season'
+            },
+            xAxis: {
+                categories: [
+                    {% for entry in data %}'{{ entry.season }}'{% if not forloop.last %}, {% endif %}{% endfor %}
+                ]
+            },
+            yAxis: {
+                title: {text: 'Matches'}
+            },
+            series: [{
+                name: 'Matches Played',
+                data: [
+                    {% for entry in data %}{{ entry.id__count }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                ],
+                
+            } ]
+        });
+    </script>
 {% endblock content %}

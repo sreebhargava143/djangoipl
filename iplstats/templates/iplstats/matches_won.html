@@ -1,19 +1,55 @@
 {% extends "iplstats/base.html" %}
 
 {% block content %}
-    <fieldset>
-        <legend class=''>{{ legend }}</legend>
-        {% for match in data %}
-            <article class="media content-section">
-                <div class="media-body">
-                    <div class="article-metadata">
-                        <p class="mr-2" href="#">{{ match.season }}</p>
-                        <small class="text-muted"></small>
-                    </div>
-                    <h2><p class="article-title" href="#">{{ match.winner }}</p></h2>
-                    <h3><p class="article-content">{{ match.id__count }}</p></h3>
-                </div>
-            </article>
+    <article>
+        <div id='plot-container' class="plot"></div>
+    </article>    
+    <script>
+        let seasons = new Set();
+        let teams = {}
+        {% for entry in data %}
+        seasons.add('{{entry.season}}');
+        if(!teams.hasOwnProperty('{{entry.winner}}')){
+            teams['{{entry.winner}}'] = [{{entry.id__count}}];
+        }
+        else{
+            teams['{{entry.winner}}'].push({{entry.id__count}});
+        }
         {% endfor %}
-    </fieldset>
+        
+        series_data = []
+        for( team in teams){
+            series_data.push({
+                name:team,
+                data:teams[team]
+            })
+        }
+        seasons = Array.from(seasons);
+        Highcharts.chart('plot-container', {
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Matches Won By All Teams'
+            },
+            xAxis: {
+                categories: seasons
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                text: 'Total Matches Won'
+                }
+            },
+            legend: {
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                stacking: 'normal'
+                }
+            },
+            series: series_data
+            });
+    </script>
 {% endblock content %}

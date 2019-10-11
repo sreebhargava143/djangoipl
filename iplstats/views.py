@@ -17,7 +17,7 @@ def matches_per_season(request):
     return render(request, 'iplstats/matches_played.html', context)
 
 def matches_won(request):
-    data = Match.objects.values('season', 'winner').annotate(Count('id')).order_by('-season')
+    data = Match.objects.values('season', 'winner').annotate(Count('id')).order_by('season')
     context = context = {
         'data':data,
         'title':'matches won',
@@ -26,7 +26,7 @@ def matches_won(request):
     return render(request, 'iplstats/matches_won.html', context)
 
 def runs_conceded(request):
-    data = Match.objects.filter(season=2016).values('delivery__bowling_team').annotate(Sum('delivery__extra_runs'))
+    data = Match.objects.filter(season=2016).values('delivery__bowling_team').annotate(Sum('delivery__extra_runs')).order_by('-delivery__extra_runs__sum')
     context = {
         'data':data,
         'title':'Runs Concede',
@@ -36,7 +36,7 @@ def runs_conceded(request):
     return render(request, 'iplstats/runs_conceded.html', context)
 
 def bowlers_economy(request):
-    data = Match.objects.filter(season=2015).values('delivery__bowler').annotate(economy=Cast(Cast((Sum('delivery__total_runs')-Sum('delivery__bye_runs')-Sum('delivery__legbye_runs')) * 6, FloatField()) / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1)), default=0, output_field=FloatField()), FloatField())).order_by('economy')
+    data = Match.objects.filter(season=2015).values('delivery__bowler').annotate(economy=Cast(Cast((Sum('delivery__total_runs')-Sum('delivery__bye_runs')-Sum('delivery__legbye_runs')) * 6, FloatField()) / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1)), default=0, output_field=FloatField()), FloatField())).order_by('economy')[:10]
     context = {
         'data':data,
         'title':'Bowlers Economy',
@@ -44,3 +44,11 @@ def bowlers_economy(request):
         'season':2015
     }
     return render(request, 'iplstats/bowlers_economy.html', context)
+
+
+
+    # SELECT "iplstats_match"."season", "iplstats_match"."winner", COUNT("iplstats_match"."id") AS "id__count" 
+    # FROM "iplstats_match" 
+    # GROUP BY "iplstats_match"."season", "iplstats_match"."winner" ORDER BY "iplstats_match"."season" DESC
+
+    # [{'season': 2017, 'winner': 'Delhi Daredevils', 'id__count': 6}, {'season': 2017, 'winner': 'Mumbai Indians', 'id__count': 12}, {'season': 2017, 'winner': 'Royal Challengers Bangalore', 'id__count': 3}, {'season': 2017, 'winner': 'Sunrisers Hyderabad', 'id__count': 8}, {'season': 2017, 'winner': 'Kings XI Punjab', 'id__count': 7}, {'season': 2017, 'winner': 'Gujarat Lions', 'id__count': 4}, {'season': 2017, 'winner': 'Rising Pune Supergiant', 'id__count': 10}, {'season': 2017, 'winner': 'Kolkata Knight Riders', 'id__count': 9}, {'season': 2016, 'winner': 'Royal Challengers Bangalore', 'id__count': 9}, {'season': 2016, 'winner': 'Mumbai Indians', 'id__count': 7}, {'season': 2016, 'winner': 'Gujarat Lions', 'id__count': 9}, {'season': 2016, 'winner': 'Rising Pune Supergiants', 'id__count': 5}, {'season': 2016, 'winner': 'Kings XI Punjab', 'id__count': 4}, {'season': 2016, 'winner': 'Delhi Daredevils', 'id__count': 7}, {'season': 2016, 'winner': 'Sunrisers Hyderabad', 'id__count': 11}, {'season': 2016, 'winner': 'Kolkata Knight Riders', 'id__count': 8}, {'season': 2015, 'winner': 'Royal Challengers Bangalore', 'id__count': 8}, {'season': 2015, 'winner': 'Kolkata Knight Riders', 'id__count': 7}, {'season': 2015, 'winner': 'Rajasthan Royals', 'id__count': 7}, {'season': 2015, 'winner': 'Delhi Daredevils', 'id__count': 5}, '...(remaining elements truncated)...']
