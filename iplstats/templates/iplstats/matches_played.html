@@ -1,0 +1,16 @@
+{% extends "iplstats/base.html" %}
+{% block content %}
+    <fieldset>
+        <legend class=''>{{ legend }}</legend>
+        {% for match in data %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <p class="mr-2" href="#">{{ match.season }}</p>
+                    </div>
+                    <h2><p class="article-title" href="#">{{ match.id__count }}</p></h2> 
+                </div>
+            </article>
+        {% endfor %}
+    </fieldset>
+{% endblock content %}
