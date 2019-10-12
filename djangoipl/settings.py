@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'api.apps.ApiConfig',
     'iplstats.apps.IplstatsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
