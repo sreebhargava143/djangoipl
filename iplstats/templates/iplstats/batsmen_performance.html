@@ -36,7 +36,7 @@
             series: [{
                 name: 'Batsmen',
                 data: [
-                    {% for entry in data %}{{ entry.strike_rate }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    {% for entry in data %}{% if entry.strike_rate %}{{ entry.strike_rate }}{% else %}0{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}
                 ],
                 
             } ]
