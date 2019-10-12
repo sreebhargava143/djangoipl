@@ -51,7 +51,7 @@ class Delivery(models.Model):
     objects = CopyManager()
 
     def __str__(self):
-        return f'{self.match_id}, {self.batting_team} vs {self.bowling_team}, {self.over}.{self.ball}'
+        return f'{self.match_id}, {self.batting_team} vs {self.bowling_team}, {self.over},{self.ball}'
 
 
 

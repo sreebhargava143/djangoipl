@@ -7,15 +7,17 @@ from .validators import *
 
 @csrf_exempt
 def get_match(request, id):
+    match = get_object_or_bad_request(Match, id)
     if request.method == 'GET':
-        match = get_object_or_404(Match, id=id)
+        match = match.first()
         response = {
             'response': model_to_dict(match)
         }
     elif request.method == "PUT":
-        match = Match.objects.filter(id=id)
         match_data = load_json_or_bad_request(request)
-        resoponse = update_or_bad_request(match, match_data, request)
+        response = update_or_bad_request(match, match_data, request)
+    elif request.method == "DELETE":
+        response = delete_or_bad_request(match, request)
     else:
         response = {
             'response':{
@@ -27,17 +29,19 @@ def get_match(request, id):
 
 @csrf_exempt
 def get_delivery(request, id):
+    delivery = get_object_or_bad_request(Delivery, id)
     if request.method == "GET":
-        delivery = get_object_or_404(Delivery, id=id)
+        delivery = delivery.first()
         response = {
             'response':model_to_dict(delivery)
         }
     elif request.method == "PUT":
-        delivery = Delivery.objects.filter(id=id)
         delivery_data = load_json_or_bad_request(request)
-        match = get_object_or_404(Match, id=delivery_data.get("match_id"))
+        match = get_object_or_bad_request(Match, id=delivery_data.get("match_id")).first()
         delivery_data['match_id'] = match
         response = update_or_bad_request(delivery, delivery_data, request)
+    elif request.method == "DELETE":
+        response = delete_or_bad_request(delivery, request)
     else:
         response = {
             'response':{

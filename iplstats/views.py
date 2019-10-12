@@ -46,7 +46,6 @@ def bowlers_economy(request):
     return render(request, 'iplstats/bowlers_economy.html', context)
 
 def batsmen_performance(request):
-    
     data = Match.objects.values('season', 'delivery__batsman').annotate(strike_rate=(Cast(Cast(Sum('delivery__batsman_runs')*100, FloatField()) / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1)),default=0, output_field=FloatField()), FloatField()))).order_by('-strike_rate')[:10]
 
     context = {
@@ -55,7 +54,3 @@ def batsmen_performance(request):
         'legend':'Batsmen Performance',
     }
     return render(request, 'iplstats/batsmen_performance.html', context)
-
-# Match.objects.values('season', 'delivery__batsman').annotate(strike_rate=(Sum('delivery__batsman_runs') * 100 / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1), default=0, output_field=FloatField()), output_field=FloatField())))
-
-# Match.objects.values('season', 'delivery__batsman').annotate(strike_rate=(Cast(Cast(Sum('delivery__batsman_runs')*100, FloatField()) / Sum(Case(When(delivery__wide_runs=0, delivery__noball_runs=0, then=1)),default=0, output_field=FloatField()), FloatField()))).order_by('-strike_rate')

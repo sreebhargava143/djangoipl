@@ -1,6 +1,7 @@
 import json
 from iplstats.models import Match, Delivery
 from django.core.exceptions import ValidationError, SuspiciousOperation
+from django.db import transaction
 
 def load_json_or_bad_request(request):
     try:
@@ -23,10 +24,11 @@ def validate_foreign_key(delivery):
         raise ValidationError("VIOLATES FOREIGN KEY CONSTRAINT !")
     return match
 
+@transaction.atomic
 def save_or_bad_request(db_object, request):
-
     try:
-        db_object.save()
+        print(db_object)
+        print(db_object.save())
         response_data = {
             'response':{
                 'status':'SUCCESS',
@@ -45,6 +47,7 @@ def save_or_bad_request(db_object, request):
         raise SuspiciousOperation("INVALID DATA !")
     return response_data
 
+@transaction.atomic
 def update_or_bad_request(db_object, data, request):
     try:
         db_object.update(**data)
@@ -64,5 +67,26 @@ def update_or_bad_request(db_object, data, request):
             }
         }
         raise SuspiciousOperation("INVALID DATA !", e)
-
     return response_data
+
+@transaction.atomic
+def delete_or_bad_request(db_object, request):
+    db_object.delete()
+    response_data = {
+            'response':{
+                'status':'SUCCESS',
+                'method':request.method,
+                'action':'RECORD DELETED'
+            }
+        }
+    return response_data
+
+
+def get_object_or_bad_request(Model, id):
+    db_object = Model.objects.filter(id=id)
+    print(db_object)
+    if db_object.first() is None:
+        print("Entered if")
+        raise SuspiciousOperation("INVALID ID !")
+    
+    return db_object
