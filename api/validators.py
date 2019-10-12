@@ -10,24 +10,6 @@ def load_json_or_bad_request(request):
         raise SuspiciousOperation("INVALID JSON !")
         
     return data
-    
-def save_data_or_bad_request(data, method):
-    try:
-        data.save()
-        response_data = {
-            'response':{
-                'status':'SUCCESS',
-                'method':method
-            }
-        }
-    except Exception:
-        response_data = {
-            'response':{
-                'status':'FAILED',
-            }
-        }
-        raise SuspiciousOperation("INVALID DATA !")
-    return response_data
 
 def validate_no_id(data):
     if data.get("id"):
@@ -40,3 +22,47 @@ def validate_foreign_key(delivery):
         match = None
         raise ValidationError("VIOLATES FOREIGN KEY CONSTRAINT !")
     return match
+
+def save_or_bad_request(db_object, request):
+
+    try:
+        db_object.save()
+        response_data = {
+            'response':{
+                'status':'SUCCESS',
+                'method':request.method,
+                'action':'NEW RECORD CREATED'
+            }
+        }
+    except Exception:
+        response_data = {
+            'response':{
+                'status':'FAILED',
+                'method':request.method,
+                'action':'NO ACTION'
+            }
+        }
+        raise SuspiciousOperation("INVALID DATA !")
+    return response_data
+
+def update_or_bad_request(db_object, data, request):
+    try:
+        db_object.update(**data)
+        response_data = {
+            'response':{
+                'status':'SUCCESS',
+                'method':request.method,
+                'action':'RECORD UPDATED'
+            }
+        }
+    except Exception as e:
+        response_data = {
+            'response':{
+                'status':'FAILED',
+                'method':request.method,
+                'action':'NO ACTION'
+            }
+        }
+        raise SuspiciousOperation("INVALID DATA !", e)
+
+    return response_data
