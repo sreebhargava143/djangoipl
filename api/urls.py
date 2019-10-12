@@ -4,5 +4,7 @@ from . import views
 
 urlpatterns = [
     path("matches/<int:id>", views.get_match, name="api_get_match"),
-    path('deliveries/<int:id>', views.get_delivery, name="api_get_delivery")
+    path('deliveries/<int:id>', views.get_delivery, name="api_get_delivery"),
+    path("matches/post", views.post_json_match, name="api_post_json_match"),
+    path("deliveries/post", views.post_json_delivery, name="api_post_json_delivery"),
 ]

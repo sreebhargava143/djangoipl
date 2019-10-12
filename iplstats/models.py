@@ -3,7 +3,7 @@ from postgres_copy import CopyManager
 
 
 class Match(models.Model):
-    id = models.IntegerField(primary_key=True)
+    # id = models.IntegerField(primary_key=True)
     season = models.IntegerField(null=False)
     city = models.CharField(max_length=60, null=True)
     date = models.DateField(null=False)
@@ -55,5 +55,4 @@ class Delivery(models.Model):
 
 
 
-# Match.objects.values('season').annotate(Count('id'))
-# Match.objects.values('season', 'winner').annotate(Count('id')).order_by('-season')
+
