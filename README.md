@@ -45,6 +45,18 @@ pip install -r requirements.txt
 cd djangoipl
 python manage.py runserver
 ```
+## Custom API Routes (No GUI use postman or curl)
+
+#### http:localhost:8000/api/matches --> works with GET and POST(CR)
+#### http:localhost:8000/api/matches/<id> --> works with GET, POST and PUT, DELETE
+#### http:localhost:8000/api/deliveries --> works with GET and POST(CR)
+#### http:localhost:8000/api/deliveries/<id> --> works with GET, POST and PUT, DELETE
+
+## DRF API (GUI supported open routes in browser)
+
+#### http:localhost:8000/drf_api/matches
+#### http:localhost:8000/drf_api/deliveries
+
 
 ## Tools used
 
@@ -81,9 +93,10 @@ python manage.py runserver
 #### virtualenv==16.7.4
 #### wrapt==1.9.0
 
+
 ## Contributors
 
-### None
+#### open to contribute
 
 
 
