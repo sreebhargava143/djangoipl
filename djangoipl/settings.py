@@ -92,10 +92,11 @@ CACHES = {
         'LOCATION': 'localhost:6379',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
+        },
+        'KEY_PREFIX': 'iplstats'
     }
 }
-
+CACHE_TTL = 60 * 15
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 

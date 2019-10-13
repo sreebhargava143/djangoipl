@@ -27,8 +27,7 @@ def validate_foreign_key(delivery):
 @transaction.atomic
 def save_or_bad_request(db_object, request):
     try:
-        print(db_object)
-        print(db_object.save())
+        db_object.save()
         response_data = {
             'response':{
                 'status':'SUCCESS',
@@ -84,9 +83,7 @@ def delete_or_bad_request(db_object, request):
 
 def get_object_or_bad_request(Model, id):
     db_object = Model.objects.filter(id=id)
-    print(db_object)
     if db_object.first() is None:
-        print("Entered if")
         raise SuspiciousOperation("INVALID ID !")
     
     return db_object
