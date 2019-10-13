@@ -11,7 +11,6 @@ from django.forms.models import model_to_dict
 
 from .validators import *
 
-from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
@@ -66,7 +65,7 @@ def delivery_rud(request, id):
         }
     return JsonResponse(response)
 
-# @cache_page(CACHE_TTL)
+
 @csrf_exempt
 def match_cr(request):
     if request.method == "POST":
