@@ -6,7 +6,7 @@ from django.forms.models import model_to_dict
 from .validators import *
 
 @csrf_exempt
-def get_match(request, id):
+def match_rud(request, id):
     match = get_object_or_bad_request(Match, id)
     if request.method == 'GET':
         match = match.first()
@@ -29,7 +29,7 @@ def get_match(request, id):
     return JsonResponse(response)
 
 @csrf_exempt
-def get_delivery(request, id):
+def delivery_rud(request, id):
     delivery = get_object_or_bad_request(Delivery, id)
     if request.method == "GET":
         delivery = delivery.first()
@@ -54,16 +54,22 @@ def get_delivery(request, id):
     return JsonResponse(response)
 
 @csrf_exempt
-def post_json_match(request):
+def match_cr(request):
     if request.method == "POST":
         match_data = load_json_or_bad_request(request)
         validate_no_id(match_data)
         match = Match(**match_data)
         response = save_or_bad_request(match, request)
         return JsonResponse(response)
+    if request.method == 'GET':
+        PERPAGE = 5
+        PAGE = 0
+        matches = Match.objects.all()[:PERPAGE]
+        response = {"response": list(matches.values("id", "season", "winner"))}
+        return JsonResponse(response)
 
 @csrf_exempt
-def post_json_delivery(request):
+def delivery_cr(request):
     if request.method == "POST":
         delivery_data = load_json_or_bad_request(request)
         validate_no_id(delivery_data)
@@ -71,4 +77,10 @@ def post_json_delivery(request):
         delivery_data['match_id'] = match
         delivery = Delivery(**delivery_data)
         response = save_or_bad_request(delivery, request)
+        return JsonResponse(response)
+    if request.method == 'GET':
+        PERPAGE = 5
+        PAGE = 0
+        deliveries = Delivery.objects.all()[:PERPAGE]
+        response = {"response": list(deliveries.values("id", "bowler", "batsman"))}
         return JsonResponse(response)
