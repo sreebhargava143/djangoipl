@@ -15,6 +15,7 @@ def get_match(request, id):
         }
     elif request.method == "PUT":
         match_data = load_json_or_bad_request(request)
+        validate_no_id(match_data)
         response = update_or_bad_request(match, match_data, request)
     elif request.method == "DELETE":
         response = delete_or_bad_request(match, request)
@@ -37,8 +38,9 @@ def get_delivery(request, id):
         }
     elif request.method == "PUT":
         delivery_data = load_json_or_bad_request(request)
-        match = get_object_or_bad_request(Match, id=delivery_data.get("match_id")).first()
-        delivery_data['match_id'] = match
+        if 'match_id' in delivery_data:
+            match = get_object_or_bad_request(Match, id=delivery_data.get("match_id")).first()
+            delivery_data['match_id'] = match
         response = update_or_bad_request(delivery, delivery_data, request)
     elif request.method == "DELETE":
         response = delete_or_bad_request(delivery, request)
