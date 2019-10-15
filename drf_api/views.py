@@ -1,11 +1,20 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from iplstats.models import Match, Delivery
 from drf_api.serializers import MatchSerializer, DeliverySerializer
-class MatchViewSet(viewsets.ModelViewSet):
-    queryset = Match.objects.all().order_by('id')
+
+class MatchViewSet(generics.ListCreateAPIView):
+    queryset = Match.objects.all()
     serializer_class = MatchSerializer
 
-class DeliveryViewSet(viewsets.ModelViewSet):
-    queryset = Delivery.objects.all().order_by('id')
+class MatchDetailViewSet(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer
+
+class DeliveryViewSet(generics.ListCreateAPIView):
+    queryset = Delivery.objects.all()
+    serializer_class = DeliverySerializer
+
+class DeliveryDetailViewSet(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Delivery.objects.all()
     serializer_class = DeliverySerializer

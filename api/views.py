@@ -75,11 +75,9 @@ def match_cr(request):
         response = save_or_bad_request(match, request)
         return JsonResponse(response)
     if request.method == 'GET':
-        PERPAGE = request.headers.get('PERPAGE')
-        PAGE = request.headers.get('PAGE')
-        key = "matches"+PAGE+PERPAGE
-        PAGE = int(PAGE)
-        PERPAGE = int(PERPAGE)
+        PERPAGE = request.GET.get('PERPAGE') or 10
+        PAGE = request.GET.get('PAGE') or 1
+        key = "matches"+str(PAGE)+str(PERPAGE)
         if key in cache:
             response = cache.get(key)
         else:
@@ -103,12 +101,10 @@ def delivery_cr(request):
         response = save_or_bad_request(delivery, request)
         return JsonResponse(response)
     if request.method == 'GET':
-        PERPAGE = request.headers.get('PERPAGE')
-        PAGE = request.headers.get('PAGE')
+        PERPAGE = request.GET.get('PERPAGE') or 10
+        PAGE = request.GET.get('PAGE') or 1
         print(PERPAGE, PAGE)
-        key = "deliveries" + PAGE + PERPAGE
-        PAGE = int(PAGE)
-        PERPAGE = int(PERPAGE)
+        key = "deliveries" + str(PAGE) + str(PERPAGE)
         if key in cache:
             response = cache.get(key)
         else:

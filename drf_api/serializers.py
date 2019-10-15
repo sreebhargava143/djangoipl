@@ -1,12 +1,14 @@
 from iplstats.models import Match, Delivery
 from rest_framework import serializers
 
-class MatchSerializer(serializers.HyperlinkedModelSerializer):
+class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Match
-        fields = ['id', 'season', 'team1', 'team2', 'winner']
+        fields = '__all__'
+        # fields = ['id', 'season', 'team1', 'team2', 'winner']
 
-class DeliverySerializer(serializers.HyperlinkedModelSerializer):
+class DeliverySerializer(serializers.ModelSerializer):
     class Meta:
         model = Delivery
-        fields = ['id', 'match_id', 'batsman', 'bowler']
+        fields = '__all__'
+        #fields = ['id', 'match_id', 'batsman', 'bowler']
